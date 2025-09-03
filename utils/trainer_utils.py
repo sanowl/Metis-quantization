@@ -164,6 +164,12 @@ def parse():
     parser.add_argument("--backward-broadcast-dim", type=int, default=-1)
     parser.add_argument("--activation-broadcast-dim", type=int, default=-1)
     
+    # Dual-range regularization
+    parser.add_argument("--enable-dual-range-reg", action="store_true")
+    parser.add_argument("--dual-range-lambda1", type=float, default=1e-4)
+    parser.add_argument("--dual-range-lambda2", type=float, default=1e-6)
+    parser.add_argument("--dual-range-epsilon", type=float, default=1e-8)
+    
     
     
     args = parser.parse_args()

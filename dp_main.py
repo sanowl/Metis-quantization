@@ -18,7 +18,7 @@ from torch.nn.parallel.distributed import DistributedDataParallel as DDP
 from transformers import get_linear_schedule_with_warmup
 from torch.utils.tensorboard import SummaryWriter
 
-from Metis import BitLinear
+from Metis import BitLinear, DualRangeRegularization, MetisLoss, get_linear_layer_parameters
 
 import argparse
 

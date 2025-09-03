@@ -14,6 +14,24 @@ def schedule_l1_m1p5_s2(input_:torch.Tensor):
     input_[5:] *= 1.5
     return input_, 2.0
 
+def schedule_adaptive_spectral(input_:torch.Tensor):
+    """
+    Implements adaptive spectral learning rate from Metis paper.
+    Formula: σ'ᵢ = 2σ'ᵢ / (1 + σ'ᵢ/σ'₁)
+    This suppresses large singular values and enhances moderate ones.
+    """
+    if len(input_) == 0:
+        return input_, 1.0
+    
+    # Get the largest singular value
+    sigma_1 = input_[0]
+    
+    # Apply adaptive rescaling: σ'ᵢ = 2σ'ᵢ / (1 + σ'ᵢ/σ'₁)
+    # Only apply to the singular values, not all components
+    rescaled = 2 * input_ / (1 + input_ / (sigma_1 + 1e-8))
+    
+    return rescaled, 1.0
+
 
 
 class LinearLowbitFunction(torch.autograd.Function):
@@ -43,6 +61,7 @@ class LinearLowbitFunction(torch.autograd.Function):
     schedule_list = {
         "none": schedule_none,
         "ysche": schedule_l1_m1p5_s2,
+        "adaptive_spectral": schedule_adaptive_spectral,
     }
     
     @staticmethod
